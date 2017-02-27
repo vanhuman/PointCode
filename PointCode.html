@@ -1,0 +1,26 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="keywords" content="electronic music, amsterdam, robert van heumen, robert van heuman, composer, musician, electronische muziek, componist, musicus, sound, geluid, sound design, geluidsontwerp">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>west28.nl | PointCode</title>
+<link type="text/css" rel="stylesheet" href="PointCode.css">
+<script type="text/javascript" src="../inc/west28.js"></script>
+<script type="text/javascript" src="detect.js"></script>
+</head>
+<body class="point" onload="Point.start()">
+
+<div id=menu>
+<input type=submit class=close id=close onclick="Point.switch(); Point.close();" value='>'>
+<input type=submit class=button onclick="Point.start(); Point.close();" value='start'>
+<input type=submit class=button onclick="Point.stop(); Point.close();" value='stop'>
+<input type=submit class=button onclick="Point.selectScoreMode(); Point.close();" value='next'>
+<input type=submit class=button onclick="Point.mainTask.wait = 100; Point.mainWaitChange = 5; Point.close();" value='fast'>
+<input type=submit class=button onclick="Point.mainTask.wait = 2*1000; Point.mainWaitChange = 100; Point.close();" value='slow'>
+</div>
+
+<script type="text/javascript" src="PointCode-min.js"></script>
+
+</body>
+</html>

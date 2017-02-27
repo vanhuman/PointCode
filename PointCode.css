@@ -1,0 +1,86 @@
+body {
+	font-family: monaco,Consolas,Lucida Console,monospace;
+}
+
+body.point {
+	margin: 0px;
+	padding: 0px;
+	background: black;
+}
+
+a:link, a:visited { color: grey; text-decoration: underline; }
+a:hover, a:active { color: black; text-decoration: none; }
+
+.tiny {
+	font-size: 12px;
+}
+
+h1.inline {
+	display: inline;
+}
+
+canvas {
+	padding-top: 20px;
+}
+
+#menu {
+	padding: 20px 40px 5px 5px;
+	float: left;
+	width: 20px;
+}
+
+.button {
+	font-family: monaco,Consolas,Lucida Console,monospace;
+    background-color: black;
+    border: none;
+    color: white;
+    text-align: left;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+	width: 40px;	
+	visibility: hidden;
+}
+
+.close {
+	font-family: monaco,Consolas,Lucida Console,monospace;
+    background-color: black;
+    border: none;
+    color: white;
+    text-align: left;
+    font-size: 10px;
+    margin: 4px 2px;
+    cursor: pointer;
+	width: 23px;	
+}
+
+/* for 800px or less */
+@media screen and (max-width: 800px) {
+canvas {
+	padding-top: 10px;
+}
+#menu {
+	padding-top: 10px;
+}
+}
+
+/* for 600px or less */
+@media screen and (max-width: 600px) {
+#menu {
+	width: auto;
+	padding-top: 0px;
+}
+.button {
+    font-size: 10px;
+    margin: 4px 0px;
+    cursor: pointer;
+	width: 40px;	
+}
+canvas {
+	padding-top: 0px;
+	padding-left: 50px;
+}
+
+}
+
+
