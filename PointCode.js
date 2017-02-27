@@ -2,6 +2,7 @@
 
 var ua = detect.parse(navigator.userAgent);
 // console.log("Browser:" + ua.browser.family + " Device:" + ua.device.family + " Device type:" + ua.device.type);
+// alert("Browser:" + ua.browser.family + " Device:" + ua.device.family + " Device type:" + ua.device.type);
 
 // get optional default scoreMode from query_string
 var queryString = (function(inputString) {
@@ -25,16 +26,52 @@ var Point = {
 	mainWaitDefault: 2*1000, 
 	mainWaitChange: 100, 
 	maxNbr: 14, // max number of boxes to sound
+	masterGain: 0.05, 
 	initClear: false, // if true then at start the boxes will be randomly colored
 	scoreModeList: ['default', 'mellow', 'red', 'green', 'blue', 'redFull', 'greenFull', 'blueFull', 'grey', 'squares', 'lines', 'single', 'yellow'],
 	metaWaitDefault: [60, 60, 40, 40, 40, 40, 40, 40, 40, 60, 60, 40, 20], 
-	context: new AudioContext,
+	// context: new AudioContext,
 	scoreModeListExt: [], scoreModeChanged: false, scoreShuffled: false, scoreMode: queryString['mode'],
 	count: 0, tuples: [], tuplesTemp: [], waitSign: -1, waitOrig: 1, waitChanged: 0,
 	mainTask: false, metaTask: false, switchValue: 1, closeGUI: false
 }; 
 
-if(ua.device.type == 'Mobile') { Point.maxNbr = 3 };
+Point.context = null;
+var usingWebAudio = true;
+
+try {
+  if (typeof AudioContext !== 'undefined') {
+      Point.context = new AudioContext();
+  } else if (typeof webkitAudioContext !== 'undefined') {
+      Point.context = new webkitAudioContext();
+  } else {
+      usingWebAudio = false;
+  }
+} catch(e) {
+    usingWebAudio = false;
+}
+
+// context state at this time is `undefined` in iOS8 Safari
+if (usingWebAudio && Point.context.state === 'suspended') {
+  var resume = function () {
+    Point.context.resume();
+    setTimeout(function () {
+      if (Point.context.state === 'running') {
+        document.body.removeEventListener('touchend', resume, false);
+      }
+    }, 0);
+  };
+  document.body.addEventListener('touchend', resume, false);
+}
+
+if(ua.device.type == 'Mobile') { // mobile except iPad
+	// Point.masterGain = 0.01 ;
+	Point.maxNbr = 3;
+};
+if(ua.browser.family == 'Mobile Safari') { // iPad
+	Point.masterGain = 0.01 ;
+	Point.maxNbr = 3;
+};
 
 // set window size
 if(window.innerHeight < window.innerWidth) { // landscape
@@ -479,7 +516,6 @@ Point.play = function(rgbArg, fadeTime, x, y) {
     var freq = [80,200,400], baseFreq = 0.0, gain = [0,0,0];
 	var attack = 0.1, release = Math.min(2,2*fadeTime); // in seconds
     var osctype = 'sine';
-	var masterGain = 0.05; // in amp
     var osc1 = Point.context.createOscillator(), 
 		osc2 = Point.context.createOscillator(), 
 		osc3 = Point.context.createOscillator();
@@ -493,7 +529,7 @@ Point.play = function(rgbArg, fadeTime, x, y) {
 
 	if(ua.browser.family != 'Safari' && ua.browser.family != 'Mobile Safari') {		
 		var panner = Point.context.createStereoPanner();
-	};
+	};	
 
 	// map rgb values to frequencies
 	freq = [50 + (rgbArg[0]/255) * 100, 200 + (rgbArg[1]/255) * 200, 400 + (rgbArg[2]/255) * 400];
@@ -545,7 +581,7 @@ Point.play = function(rgbArg, fadeTime, x, y) {
 
 	// attack
     master.gain.setValueAtTime(0, Point.context.currentTime);
-    master.gain.linearRampToValueAtTime(masterGain, Point.context.currentTime+attack);  
+    master.gain.linearRampToValueAtTime(Point.masterGain, Point.context.currentTime+attack);  
 	// start osc's  
     osc1.start(0); osc2.start(0); osc3.start(0);
 	// start LFO
@@ -553,7 +589,7 @@ Point.play = function(rgbArg, fadeTime, x, y) {
 
 	// schedule fade out and stop
     setTimeout( function() {
-        master.gain.setValueAtTime(masterGain, Point.context.currentTime);
+        master.gain.setValueAtTime(Point.masterGain, Point.context.currentTime);
         master.gain.linearRampToValueAtTime(0, Point.context.currentTime+release);    
         osc1.stop(Point.context.currentTime + release);
         osc2.stop(Point.context.currentTime + release);
