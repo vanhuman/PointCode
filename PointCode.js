@@ -2,7 +2,7 @@
 
 var ua = detect.parse(navigator.userAgent);
 // console.log("Browser:" + ua.browser.family + " Device:" + ua.device.family + " Device type:" + ua.device.type);
-// alert("Browser:" + ua.browser.family + " Device:" + ua.device.family + " Device type:" + ua.device.type);
+// alert("Browser family:" + ua.browser.family + " Device family:" + ua.device.family + " Device type:" + ua.device.type + " OS family:" + ua.os.family);
 
 // get optional default scoreMode from query_string
 var queryString = (function(inputString) {
@@ -27,6 +27,7 @@ var Point = {
 	mainWaitChange: 100, 
 	maxNbr: 14, // max number of boxes to sound
 	masterGain: 0.05, 
+	fadeTimeFactor: 1,
 	initClear: false, // if true then at start the boxes will be randomly colored
 	scoreModeList: ['default', 'mellow', 'red', 'green', 'blue', 'redFull', 'greenFull', 'blueFull', 'grey', 'squares', 'lines', 'single', 'yellow'],
 	metaWaitDefault: [60, 60, 40, 40, 40, 40, 40, 40, 40, 60, 60, 40, 20], 
@@ -36,9 +37,9 @@ var Point = {
 	mainTask: false, metaTask: false, switchValue: 1, closeGUI: false
 }; 
 
+// trick to get iPad to play
 Point.context = null;
 var usingWebAudio = true;
-
 try {
   if (typeof AudioContext !== 'undefined') {
       Point.context = new AudioContext();
@@ -47,11 +48,7 @@ try {
   } else {
       usingWebAudio = false;
   }
-} catch(e) {
-    usingWebAudio = false;
-}
-
-// context state at this time is `undefined` in iOS8 Safari
+} catch(e) { usingWebAudio = false }
 if (usingWebAudio && Point.context.state === 'suspended') {
   var resume = function () {
     Point.context.resume();
@@ -64,13 +61,17 @@ if (usingWebAudio && Point.context.state === 'suspended') {
   document.body.addEventListener('touchend', resume, false);
 }
 
-if(ua.device.type == 'Mobile') { // mobile except iPad
-	// Point.masterGain = 0.01 ;
-	Point.maxNbr = 3;
-};
-if(ua.browser.family == 'Mobile Safari') { // iPad
+// device dependent settings
+if(ua.browser.family == 'Mobile Safari') { // iPad & iPhone
 	Point.masterGain = 0.01 ;
 	Point.maxNbr = 3;
+	Point.fadeTimeFactor = 0.5;
+}
+else if(ua.device.type == 'Mobile') { // mobile (Android, iPhone) except iPad
+	// Point.masterGain = 0.01 ;
+	Point.masterGain = 0.03 ;
+	Point.maxNbr = 3;
+	Point.fadeTimeFactor = 0.8;
 };
 
 // set window size
@@ -146,8 +147,16 @@ Point.close = function(){
 }
 
 // start and stop functions
-Point.start = function() {
-	if(!Point.mainTask.running) {
+Point.start = function(mode) { // mode == 'init' only when page is loaded 
+	if(mode == 'init' && ua.browser.family == 'Mobile Safari') { // this opens the menu and does not start the task
+		var width, margin = '', btns = document.getElementsByClassName('button');
+		if(ua.device.family == 'iPad') { width = '60px' } else { width = '40px' };
+		for (var i = 0; i < btns.length; i++) {
+			btns[i].style.width = width;
+		};
+		Point.switch();
+	}
+	else if(!Point.mainTask.running) {
 		Point.clearTo([0,0,0]);
 		Point.init();
 		Point.flicker();
@@ -223,7 +232,7 @@ Point.taskConstructor = function(funcArg, waitArg) {
 Point.init = function() { 
 	// clear to random colors
 	if(Point.initClear) { Point.clearTo() };
-	
+		
 	// prepare tuples
 	Point.tuplesTemp = Point.tuples;
 	shuffleArray(Point.tuplesTemp);
@@ -277,13 +286,14 @@ Point.init = function() {
 	}, 1000 * Point.metaWaitDefault[Point.scoreModeList.indexOf(Point.scoreMode)]);  
 	// console.log("metaWait: "+(Point.metaTask.wait/1000).toFixed(2)+"sec");
 	
-	
 	// immediately stop so we can start it manually below
 	Point.metaTask.stop(); 
 	Point.mainTask.stop(); 
 
 	// control mainTask
 	setTimeout(function() {Point.mainTask.start(); Point.metaTask.start()}, 0*1000);
+	
+	// if length of the set is fixed, schedule stop
 	if(Point.setLength > 0) {
 		setTimeout(function() {Point.mainTask.stop()}, Point.setLength*1000);
 	};
@@ -514,7 +524,7 @@ Point.drawBoxes = function(fadeTime) { // fadeTime in seconds
 Point.play = function(rgbArg, fadeTime, x, y) { 
 	// rgbArg is array with 3 items between 0-255, fadeTime in seconds, (x,y) is position of box
     var freq = [80,200,400], baseFreq = 0.0, gain = [0,0,0];
-	var attack = 0.1, release = Math.min(2,2*fadeTime); // in seconds
+	var attack = 0.1, release = Math.min(2,2*fadeTime) * Point.fadeTimeFactor; // in seconds
     var osctype = 'sine';
     var osc1 = Point.context.createOscillator(), 
 		osc2 = Point.context.createOscillator(), 

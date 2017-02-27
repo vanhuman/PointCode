@@ -14,6 +14,11 @@
  * var agentInfo = detect.parse(navigator.userAgent);
  * console.log(agentInfo.browser.family); // Chrome
  *
+Firefox: Browser family:Firefox / Device family:Other / Device type:Desktop / OS family:Mac OS X
+Chrome: Browser family:Chrome / Device family:Other / Device type:Desktop / OS family:Mac OS X
+iPad: Browser family: Mobile Safari / Device family: iPad / Device type: Tablet / OS family: iOS
+iPhone: Browser family: Mobile Safari / Device family: iPhone / Device type: Mobile / OS family: iOS
+Android: Browser family: Chrome Mobile / Device family: Nexus 5X / Device type: Mobile / OS family: Android
  */
 (function(root, undefined) {
     // Shim Array.prototype.map if necessary
