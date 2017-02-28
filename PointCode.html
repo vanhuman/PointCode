@@ -16,8 +16,8 @@
 <input type=button class=button onclick="Point.start(); Point.close();" value='start'>
 <input type=button class=button onclick="Point.stop(); Point.close();" value='stop'>
 <input type=button class=button onclick="Point.selectScoreMode(); Point.close();" value='next'>
-<input type=button class=button onclick="Point.mainTask.wait = 100; Point.mainWaitChange = 5; Point.close();" value='fast'>
-<input type=button class=button onclick="Point.mainTask.wait = 2*1000; Point.mainWaitChange = 100; Point.close();" value='slow'>
+<input type=button class=button onclick="Point.mainWaitDefault = 500; Point.mainTask.wait = 500; Point.mainWaitChange = 20; Point.close();" value='fast'>
+<input type=button class=button onclick="Point.mainWaitDefault = 2*1000; Point.mainTask.wait = 2*1000; Point.mainWaitChange = 80; Point.close();" value='slow'>
 </div>
 
 <script type="text/javascript" src="PointCode-min.js"></script>

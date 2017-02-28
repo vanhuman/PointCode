@@ -15,16 +15,18 @@
 $text = array (
 	'nl' => array (
 	'PuntCode', 
-	'Je gaat zo PuntCode ervaren. Een vereenvoudigde, online versie van de audiovisuele installatie/compositie <a href=/Point-to-Line/ target=_blank>Point-to-Line</a> door Robert van Heumen. PuntCode is een werk-in-uitvoering, gebouwd in Javascript, Web Audio API en HTML Canvas. Zorg ervoor dat het geluidsvolume op je apparaat op een goed niveau staat voordat je de link hieronder klikt. Als er op de volgende pagina niets gebeurt, ververs dan de pagina (meestal met F5). Gebruik een Chrome browser voor de beste ervaring. PuntCode loopt helemaal vanzelf, maar als je meer controle wilt, klik dan op de volgende pagina op het pijltje linksboven om het menu te openen.',
-	'PuntCode is getest en werkt op Mac OS X 10.9.5 met de Safari, Firefox en Chrome browsers, op Android smartphones, iPads en iPhones. iPad en iPhone zijn er niet heel blij mee als de installatie vanzelf start, dus daarbij zul je op de volgende pagina op de \'start\' knop moeten klikken. Alle feedback is welkom om de installatie te verbeteren. Je kunt contact met ons opnemen via <a href="mailto:point@west28.nl">point-at-west28-nl</a>.',
-	'start PuntCode'
+	'Je gaat zo PuntCode ervaren. PuntCode is een soort treinreis. Uit het raam kijkend zie je het landschap voorbij glijden, soms flitsen. Je droomt weg, construeert je eigen verhaal. PuntCode is een treinreis door een abstract landschap. Ga lekker zitten, ontspan en geniet van de reis.', 
+	'Zorg ervoor dat het geluidsvolume op je apparaat op een goed niveau staat voordat je de link hieronder klikt. Als er op de volgende pagina niets gebeurt, ververs dan de pagina (meestal met F5). Gebruik een Chrome of Firefox browser op een computer voor de beste ervaring. PuntCode loopt helemaal vanzelf, maar als je meer controle wilt, klik dan op de volgende pagina op het pijltje linksboven om het menu te openen. Op iPad en iPhone moet je de treinreis zelf starten door op de volgende pagina op de \'start\' knop te klikken. ',
+	'start PuntCode',
+	'PuntCode is een vereenvoudigde, online versie van de audiovisuele installatie/compositie <a href=/Point-to-Line/ target=_blank>Point-to-Line</a> door Robert van Heumen. PuntCode is een werk-in-uitvoering, gebouwd in Javascript, Web Audio API en HTML Canvas. PuntCode is getest en werkt op Mac OS X 10.9.5 met de Safari, Firefox en Chrome browsers, op Android smartphones, iPads en iPhones. Alle feedback is welkom om de installatie te verbeteren. Je kunt contact met ons opnemen via <a href="mailto:point@west28.nl">point-at-west28-nl</a>.'
 	)
 	,
 	'en' => array (
 	'PointCode', 
-	'You are about to enter PointCode, a simplified, online version of the audio-visual installation <a href=/Point-to-Line/ target=_blank>Point-to-Line</a> by Robert van Heumen. PointCode is a work in progress, built in Javascript, Web Audio API and HTML Canvas. Before you click the link below, make sure the audio volume on your device is at a good level. Use a Chrome browser for the best experience. If nothing seems to happen when you get to the next page, refresh the page (usually with F5). PointCode runs fully automatic, buf if you are interested in more control, click on the arrow in the left upper corner of the next page to open the menu.',
-	'PointCode is tested to work on Mac OS X 10.9.5 with the Safari, Firefox and Chrome browsers, as well as on Android mobile phones, iPads and iPhones. The latter two do not like it if the installation starts automatically, so for those you will have to click on the \'start\' button on the next page. We very much appreciate any feedback, so we can improve the work. We can be contacted at <a href="mailto:point@west28.nl">point-at-west28-nl</a>.',
-	'enter PointCode'
+	'You are about to experience PointCode. PointCode is like a trainride. Looking out of the window you see the scenery flowing by, sometimes flashing by. Let your mind wander, construct your own tale. PointCode is a trainride in an abstract landscape. Sit back, relax and enjoy the ride. ', 
+	'Before you click the link below, make sure the audio volume on your device is at a good level. Use a Chrome of Firefox browser on a computer for the best experience. If nothing seems to happen when you get to the next page, refresh the page (usually with F5). PointCode runs fully automatic, buf if you are interested in more control, click on the arrow in the left upper corner of the next page to open the menu. On iPad and iPhone you will have to start the trainride yourself by clicking on the \'start\' button on the next page. ',
+	'enter PointCode',
+	'* PointCode is a simplified, online version of the audio-visual installation <a href=/Point-to-Line/ target=_blank>Point-to-Line</a> by Robert van Heumen. PointCode is a work in progress, built in Javascript, Web Audio API and HTML Canvas. PointCode is tested to work on Mac OS X 10.9.5 with the Safari, Firefox and Chrome browsers, as well as on Android mobile phones, iPads and iPhones. We very much appreciate any feedback, so we can improve the work. We can be contacted at <a href="mailto:point@west28.nl">point-at-west28-nl</a>.'
 	)
 );
 
@@ -45,6 +47,8 @@ else { echo '<a href="?lang=en">english version</a>'; } ?>
 <h2><a href="PointCode.html?version<? echo rand(0,1000) ?>"><?= $text[$lang][3] ?></a></h2>
 <br /><br /> 
 <img src=/images/PointCode2.jpg>
+<br /><br /> 
+<?= $text[$lang][4] ?>
 
 </body>
 </html>

@@ -24,17 +24,17 @@ var Point = {
 	wh: [1050,600], xy: [7,4], // default width, height, x and y, in landscape mode
 	setLength: 0 * 60, 
 	mainWaitDefault: 2*1000, 
-	mainWaitChange: 100, 
+	mainWaitChange: 80, 
 	maxNbr: 14, // max number of boxes to sound
 	masterGain: 0.05, 
-	fadeTimeFactor: 1,
+	fadeTimeFactor: 1, 
 	initClear: false, // if true then at start the boxes will be randomly colored
 	scoreModeList: ['default', 'mellow', 'red', 'green', 'blue', 'redFull', 'greenFull', 'blueFull', 'grey', 'squares', 'lines', 'single', 'yellow'],
 	metaWaitDefault: [60, 60, 40, 40, 40, 40, 40, 40, 40, 60, 60, 40, 20], 
 	// context: new AudioContext,
 	scoreModeListExt: [], scoreModeChanged: false, scoreShuffled: false, scoreMode: queryString['mode'],
-	count: 0, tuples: [], tuplesTemp: [], waitSign: -1, waitOrig: 1, waitChanged: 0,
-	mainTask: false, metaTask: false, switchValue: 1, closeGUI: false
+	count: 0, tuples: [], tuplesTemp: [], waitSign: -1, waitOrig: 1, waitChanged: false,
+	mainTask: false, metaTask: false, switchValue: 1, closeGUI: false, fastForward: false
 }; 
 
 // trick to get iPad to play
@@ -243,7 +243,6 @@ Point.init = function() {
 	// create main task
 	Point.mainTask = Point.taskConstructor(function() { 
 		var wait = this.wait; // in milliseconds, initially taken from waitDefault (set below)
-		// console.log("WaitTime: "+wait.toFixed(2));
 
 		// count number of loops
 		Point.count += 1;
@@ -262,7 +261,7 @@ Point.init = function() {
 		Point.drawBoxes( (wait/1000)/2 ); 	
 			
 		// reset wait if changed
-		if(Point.waitChanged==1) { wait = Point.waitOrig; Point.waitChanged = 0; }
+		if(Point.waitChanged) { wait = Point.waitOrig; Point.waitChanged = false; }
 		
 		// reset if scoreModeChanged
 		if(Point.scoreModeChanged) { Point.scoreModeChanged = false }; 
@@ -272,31 +271,40 @@ Point.init = function() {
 		if(wait < 0.5*Point.mainWaitDefault) { Point.waitSign = 1 };
 		if(wait > 2*Point.mainWaitDefault) { Point.waitSign = -1 };
 		wait = wait + Point.waitSign * Point.mainWaitChange * Math.random();
-		if(Math.random() < 0.1) { Point.waitOrig = wait; wait = wait / 2; Point.waitChanged = 1; };
+		if(Math.random() < 0.1 || Point.fastForward) { 
+			Point.waitOrig = wait; 
+			if(wait > Point.mainWaitDefault) { wait = wait / 2 } else { wait = wait * 2 }; 
+			Point.waitChanged = true; 
+			// console.log('double/half speed');
+		};
+		// console.log("WaitTime: "+ (wait/1000).toFixed(2));
 		return wait; 
 	}, Point.mainWaitDefault);  
 
-	Point.metaTask = Point.taskConstructor(function() { // create meta task to switch scoreModes
-		var wait = this.wait; 
+	// create meta task to switch scoreModes
+	Point.metaTask = Point.taskConstructor(function() {
+		var wait; 
+		Point.fastForward = false;
 		Point.selectScoreMode(); 
 		wait = Point.metaWaitDefault[Point.scoreModeList.indexOf(Point.scoreMode)]; // wait set by scoreMode
 		wait = wait + (-5 + 10 * Math.random()); // add random value between -5 and 5 sec
+		if(Math.random() < 0.2) { // randomly make wait short
+			wait = 5 + 10 * Math.random();
+			Point.fastForward = true;
+			// console.log('fast forward');
+		};
 		// console.log("metaWait: "+wait.toFixed(2)+"sec");
 		return wait * 1000;
 	}, 1000 * Point.metaWaitDefault[Point.scoreModeList.indexOf(Point.scoreMode)]);  
-	// console.log("metaWait: "+(Point.metaTask.wait/1000).toFixed(2)+"sec");
 	
 	// immediately stop so we can start it manually below
-	Point.metaTask.stop(); 
-	Point.mainTask.stop(); 
+	Point.metaTask.stop(); Point.mainTask.stop(); 
 
 	// control mainTask
 	setTimeout(function() {Point.mainTask.start(); Point.metaTask.start()}, 0*1000);
 	
 	// if length of the set is fixed, schedule stop
-	if(Point.setLength > 0) {
-		setTimeout(function() {Point.mainTask.stop()}, Point.setLength*1000);
-	};
+	if(Point.setLength > 0) { setTimeout(function() {Point.mainTask.stop()}, Point.setLength*1000) };
 };
 
 // function to select new scoreMode
@@ -512,7 +520,7 @@ Point.drawBoxes = function(fadeTime) { // fadeTime in seconds
 		// fill boxes
 		Point.boxes.fillStyle = "rgb("+rgb[0]+","+rgb[1]+","+rgb[2]+")";
 		Point.boxes.fillRect(Point.boxPix * tuple[0], Point.boxPix * tuple[1], Point.boxPix, Point.boxPix);
-		if(Point.scoreModeChanged && index == 0) {
+		if(Point.scoreModeChanged && index == 0 && Math.random() < 0.3) {
 	        Point.boxes.font = '20px monaco';
 			Point.boxes.fillStyle = "rgb("+rgbText[0]+","+rgbText[1]+","+rgbText[2]+")";
 	        Point.boxes.fillText("> "+Point.scoreMode, Point.boxPix * tuple[0], Point.boxPix * tuple[1] + 20);
