@@ -23,7 +23,7 @@ $text = array (
 	,
 	'en' => array (
 	'PointCode', 
-	'You are about to experience PointCode. PointCode is like a trainride. Looking out of the window you see the scenery flowing by, sometimes flashing by. Let your mind wander, construct your own tale. PointCode is a trainride in an abstract landscape. Sit back, relax and enjoy the ride. ', 
+	'You are about to experience PointCode. PointCode is like a trainride. Looking through the window you see the scenery flowing by, sometimes flashing by. Let your mind wander, construct your own tale. PointCode is a trainride in an abstract landscape. Sit back, relax and enjoy the ride. ', 
 	'Before you click the link below, make sure the audio volume on your device is at a good level. Use a Chrome of Firefox browser on a computer for the best experience. If nothing seems to happen when you get to the next page, refresh the page (usually with F5). PointCode runs fully automatic, buf if you are interested in more control, click on the arrow in the left upper corner of the next page to open the menu. On iPad and iPhone you will have to start the trainride yourself by clicking on the \'start\' button on the next page. ',
 	'enter PointCode',
 	'* PointCode is a simplified, online version of the audio-visual installation <a href=/Point-to-Line/ target=_blank>Point-to-Line</a> by Robert van Heumen. PointCode is a work in progress, built in Javascript, Web Audio API and HTML Canvas. PointCode is tested to work on Mac OS X 10.9.5 with the Safari, Firefox and Chrome browsers, as well as on Android mobile phones, iPads and iPhones. We very much appreciate any feedback, so we can improve the work. We can be contacted at <a href="mailto:point@west28.nl">point-at-west28-nl</a>.'
